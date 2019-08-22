@@ -35,84 +35,86 @@ namespace AmazonPay
             const string REMOVED_TEXT = "*REMOVED*";
             List<string> sanitizeList = new List<string>();
 
-            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["sanitizeList"]))
-                throw new ArgumentException("You have set Logger but we are missing sanitezeList property in configuration file. \n " +
-                                    "Please add:'  \n" +
-                                    "<appSettings> \n" +
-                                    "<add key=\"sanitizeList\" value=\"Example1;Example2;Example3\"/> \n" +
-                                    "</appSettings>");
+            return data;
 
-            // Load list of sanitized tags in to array
-            string[] listArray = ConfigurationManager.AppSettings["sanitizeList"].Split(new char[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            // Load SanitizeDataList
-            foreach (var item in listArray)
-            {
-                sanitizeList.Add(item);
-            }
-            // return data if sanitazation list is empty
-            if (sanitizeList.Count < 1) return data;
+            //if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["sanitizeList"]))
+            //    throw new ArgumentException("You have set Logger but we are missing sanitezeList property in configuration file. \n " +
+            //                        "Please add:'  \n" +
+            //                        "<appSettings> \n" +
+            //                        "<add key=\"sanitizeList\" value=\"Example1;Example2;Example3\"/> \n" +
+            //                        "</appSettings>");
 
-            // Response Data type
-            if (type == DataType.Response)
-            {
-                // Load data as XML
-                XmlDocument doc = new XmlDocument();
+            //// Load list of sanitized tags in to array
+            //string[] listArray = ConfigurationManager.AppSettings["sanitizeList"].Split(new char[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //// Load SanitizeDataList
+            //foreach (var item in listArray)
+            //{
+            //    sanitizeList.Add(item);
+            //}
+            //// return data if sanitazation list is empty
+            //if (sanitizeList.Count < 1) return data;
 
-                doc.LoadXml(data);
+            //// Response Data type
+            //if (type == DataType.Response)
+            //{
+            //    // Load data as XML
+            //    XmlDocument doc = new XmlDocument();
 
-                // Find and remove data
-                foreach (string item in sanitizeList)
-                {
-                    XmlNode node = doc.GetElementsByTagName(item).Item(0);
-                    if (node != null && node.ChildNodes.Count > 0)
-                    {
-                        node.InnerText = REMOVED_TEXT;
-                    }
-                }
-                returnString = doc.OuterXml;
+            //    doc.LoadXml(data);
 
-            }
-            // Request Data type
-            else if (type == DataType.Request)
-            {
-                string[] separatedURLQueryString = data.Split('\n');
+            //    // Find and remove data
+            //    foreach (string item in sanitizeList)
+            //    {
+            //        XmlNode node = doc.GetElementsByTagName(item).Item(0);
+            //        if (node != null && node.ChildNodes.Count > 0)
+            //        {
+            //            node.InnerText = REMOVED_TEXT;
+            //        }
+            //    }
+            //    returnString = doc.OuterXml;
 
-                var queryString = HttpUtility.ParseQueryString(separatedURLQueryString[separatedURLQueryString.Length - 1].TrimStart());
+            //}
+            //// Request Data type
+            //else if (type == DataType.Request)
+            //{
+            //    string[] separatedURLQueryString = data.Split('\n');
 
-                // Load SanitizeDataList
-                foreach (var item in sanitizeList)
-                {
-                    // Remove unwanted queries
-                    if (!String.IsNullOrEmpty(queryString[item])) queryString.Set(item, REMOVED_TEXT);
-                }
+            //    var queryString = HttpUtility.ParseQueryString(separatedURLQueryString[separatedURLQueryString.Length - 1].TrimStart());
 
-                separatedURLQueryString[separatedURLQueryString.Length - 1] = queryString.ToString();
+            //    // Load SanitizeDataList
+            //    foreach (var item in sanitizeList)
+            //    {
+            //        // Remove unwanted queries
+            //        if (!String.IsNullOrEmpty(queryString[item])) queryString.Set(item, REMOVED_TEXT);
+            //    }
 
-                Array.ForEach(separatedURLQueryString, value => returnString += value + '\n');
+            //    separatedURLQueryString[separatedURLQueryString.Length - 1] = queryString.ToString();
 
-                returnString = returnString.Remove(returnString.Length - 1);
-            }
-            // Json Data type
-            else if (type == DataType.JsonString)
-            {
-                var jsonObj = JObject.Parse(data);
+            //    Array.ForEach(separatedURLQueryString, value => returnString += value + '\n');
 
-                // Load SanitizeDataList
-                foreach (var item in sanitizeList)
-                {
-                    // Replace unwanted data
-                    if (jsonObj[item] != null)
-                        jsonObj[item].Replace(REMOVED_TEXT);
-                }
+            //    returnString = returnString.Remove(returnString.Length - 1);
+            //}
+            //// Json Data type
+            //else if (type == DataType.JsonString)
+            //{
+            //    var jsonObj = JObject.Parse(data);
 
-                returnString = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
-            }
-            // Text Data Type
-            else if (type == DataType.Text)
-            {
-                returnString = data;
-            }
-            return returnString;
+            //    // Load SanitizeDataList
+            //    foreach (var item in sanitizeList)
+            //    {
+            //        // Replace unwanted data
+            //        if (jsonObj[item] != null)
+            //            jsonObj[item].Replace(REMOVED_TEXT);
+            //    }
+
+            //    returnString = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
+            //}
+            //// Text Data Type
+            //else if (type == DataType.Text)
+            //{
+            //    returnString = data;
+            //}
+            //return returnString;
         }
     }
 }

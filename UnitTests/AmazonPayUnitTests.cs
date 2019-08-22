@@ -19,7 +19,7 @@ using System.Xml;
 using System.Text;
 using System.Globalization;
 using System.Threading;
-
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests
 {
@@ -259,11 +259,7 @@ namespace UnitTests
         [Test]
         public void TestLoggingMessageClient()
         {
-            // Setting Simple Logger Adapter
-            Common.Logging.LogManager.Adapter = new Common.Logging.Simple.TraceLoggerFactoryAdapter();
-
-            // Create logger
-            Common.Logging.ILog logger = Common.Logging.LogManager.GetLogger<Client>();
+            var logger = new NullLogger<Client>();
 
             // Test direct call to CalculateSignatureAndParametersToString
             Client client = new Client(clientConfig);
@@ -310,11 +306,8 @@ AWSAccessKeyId=test&Action=GetOrderReferenceDetails&AddressConsentToken=test&Ama
         [Test]
         public void TestLoggingMessage_IpnHandler()
         {
-            // Setting Simple Logger Adapter
-            Common.Logging.LogManager.Adapter = new Common.Logging.Simple.TraceLoggerFactoryAdapter();
+            var logger = new NullLogger<IpnHandler>();
 
-            // Create logger
-            Common.Logging.ILog logger = Common.Logging.LogManager.GetLogger<IpnHandler>();
 
             //Setting filePath to access test files 
             string filePath = @"TestFiles\AuthorizeNotification.json";
@@ -2065,7 +2058,7 @@ AWSAccessKeyId=test&Action=GetOrderReferenceDetails&AddressConsentToken=test&Ama
             Dictionary<string, object> dictResponse = new Dictionary<string, object>()
               {
                   {"AmazonOrderReferenceId","S01-5806490-2147504"},
-                  {"ExpirationTimestamp","9/27/2015 2:18:33 AM"},
+                  {"ExpirationTimestamp","2015/9/27 2:18:33"},
                   {"SellerNote","This is testing API call"}
               };
 
