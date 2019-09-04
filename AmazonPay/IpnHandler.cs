@@ -54,8 +54,6 @@ namespace AmazonPay
         private BillingAgreementDetailsResponse billingAgreementDetailsObject;
         private ChargebackResponse chargebackResponseObject;
 
-        private ConcurrentDictionary<string, X509Certificate2> certCache = new ConcurrentDictionary<string, X509Certificate2>();
-
         /// <summary>
         ///  Common Logger Property
         /// </summary>
@@ -492,8 +490,8 @@ namespace AmazonPay
         /// <returns>true if successful</returns>
         private bool VerifyMsgMatchesSignatureWithPublicCert(byte[] data, byte[] signature)
         {
-            RSACryptoServiceProvider csp = (RSACryptoServiceProvider)GetPublicKey();
-            return csp.VerifyData(data, CryptoConfig.MapNameToOID("SHA1"), signature);
+            RSA csp = (RSA)GetPublicKey();
+            return csp.VerifyData(data, signature, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
         }
 
         /// <summary>

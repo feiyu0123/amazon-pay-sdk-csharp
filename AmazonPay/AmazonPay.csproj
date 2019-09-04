@@ -8,10 +8,11 @@
     <AssemblyOriginatorKeyFile>KeyFile.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <Description>AmazonPay service for .net core. This API section enables you to programmatically retrieve shipping and payment information provided by the buyer from their Amazon account. It allows you to authorize, capture, and refund payments, enabling a variety of payments scenarios.</Description>
-    <AssemblyVersion>3.5.1.1</AssemblyVersion>
-    <FileVersion>3.5.1.1</FileVersion>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
     <PackageTags>AmazonPay</PackageTags>
     <RepositoryUrl>https://github.com/feiyu0123/amazon-pay-sdk-csharp</RepositoryUrl>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
